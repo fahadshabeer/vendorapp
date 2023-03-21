@@ -128,8 +128,7 @@ class PatientProfile extends StatelessWidget {
                   height: 60.h,
                   color: const Color(0xff14AE48),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ScanThumb()));
+
                   },
                   child: const Text(
                     "SUBMIT",

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vendorapp/models/patient_model.dart';
+
 class CustomListTile extends StatelessWidget {
-  const CustomListTile({Key? key}) : super(key: key);
+  final PatientModel patientModel;
+
+  const CustomListTile({Key? key, required this.patientModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,41 +24,52 @@ class CustomListTile extends StatelessWidget {
             child: ListTile(
               leading: Image.asset("assets/images/person.png"),
               title: Column(
-                children:  [
+                children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text("Justin Sha",
-                          style: TextStyle(
+                        child: Text(
+                          patientModel.name,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Color(0xffFA4268),
                           ),
-                        ),),
-                      Icon(Icons.arrow_forward_ios_outlined),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        size: 20.sp,
+                      ),
                     ],
                   ),
-                  const Align(
+                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("+911234567890",
-                      style: TextStyle(
+                    child: Text(
+                      patientModel.phone,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.h,),
-                  const Text("Lorem Ipsum is simply dummy text of the printing "
-                      "and typesetting industry.",
-                    style: TextStyle(
-                      color: Colors.blueGrey,
-                    ),),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "${patientModel.city}, ${patientModel.district}, ${patientModel.state}",
+                      style: const TextStyle(
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ),
-
       ],
     );
   }

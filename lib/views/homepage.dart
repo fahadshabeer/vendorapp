@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                   if (state is LoginLoaded) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Login Successfull")));
+                        const SnackBar(content: Text("Login Successful")));
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Home()));
                   }

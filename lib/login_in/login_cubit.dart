@@ -1,6 +1,4 @@
-
-
-
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -19,31 +17,28 @@ class LoginCubit extends Cubit<LoginState> {
   fetchData(String email, String password) async {
     try {
       emit(LoginLoading());
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      if (userCredential.user != null) {
-        var ref = FirebaseFirestore.instance
-            .collection('userdata')
-            .doc(userCredential.user!.uid);
-        var data = await ref.get();
-        log(data.data().toString());
+      var ref = await FirebaseFirestore.instance
+          .collection("vendors")
+          .where("email", isEqualTo: email)
+          .where("password", isEqualTo: password)
+          .get();
+      if (ref.docs.isNotEmpty) {
+        var data = ref.docs.first;
+        print(jsonEncode(data.data()));
         var usermodel = UserDataModel.fromJson(data.data()!);
         await LoginSharedPref.setData(usermodel);
         emit(LoginLoaded());
-
+      }else{
+        throw Exception("No user record found corresponding to these credentials");
       }
     } catch (e) {
       if (e is FirebaseException) {
         emit(LoginError(err: e.message.toString()));
-      }
-      else if (e is SocketException) {
+      } else if (e is SocketException) {
         emit(LoginError(err: e.message.toString()));
-      }
-      else if(e is FirebaseAuthException)
-        {
-          emit(LoginError(err: e.message.toString()));
-        }
-      else {
+      } else if (e is FirebaseAuthException) {
+        emit(LoginError(err: e.message.toString()));
+      } else {
         emit(LoginError(err: e.toString()));
       }
     }

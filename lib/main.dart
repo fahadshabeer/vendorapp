@@ -3,7 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vendorapp/cubits/donation_changes_cubit/donation_changes_cubit.dart';
+import 'package:vendorapp/cubits/patients_cubit/patients_cubit.dart';
 import 'package:vendorapp/login_in/login_cubit.dart';
+import 'package:vendorapp/models/user_data_model.dart';
+import 'package:vendorapp/sharedpref/login_shared_pref.dart';
 import 'package:vendorapp/sign_up/signup_cubit.dart';
 import 'package:vendorapp/views/about_us.dart';
 import 'package:vendorapp/views/home.dart';
@@ -20,11 +24,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  var user=await LoginSharedPref.getdata();
+  runApp(MyApp(userDataModel: user));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final UserDataModel? userDataModel;
+  const MyApp({super.key,required this.userDataModel});
 
   // This widget is the root of your application.
   @override
@@ -38,6 +44,8 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider(create: (context) => SignupCubit()),
             BlocProvider(create: (context) => LoginCubit()),
+            BlocProvider(create: (context) => PatientsCubit()),
+            BlocProvider(create: (context) => DonationChangesCubit()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -51,8 +59,7 @@ class MyApp extends StatelessWidget {
           ),
         );
       },
-      child: FirebaseAuth.instance.currentUser != null
-          ? const Home()
+      child: userDataModel!=null? const Home()
           : const HomePage(),
     );
   }
