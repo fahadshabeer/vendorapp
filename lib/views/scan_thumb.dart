@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vendorapp/cubits/donation_changes_cubit/donation_changes_cubit.dart';
 import 'package:vendorapp/views/thankyou.dart';
 
@@ -16,7 +19,7 @@ class ScanThumb extends StatefulWidget {
 }
 
 class _ScanThumbState extends State<ScanThumb> {
-
+  File? img;
   @override
   void initState() {
     context.read<DonationChangesCubit>().donationChanges(widget.donationId);
@@ -99,11 +102,27 @@ class _ScanThumbState extends State<ScanThumb> {
                   ),
 
 
-                  Container(
-                    height: 210.h,
-                    width: 317.w,
-                    margin: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Image.asset("assets/images/thumb.png"),
+                  InkWell(
+                    onTap:()async{
+                      XFile? file=await ImagePicker().pickImage(source: ImageSource.gallery);
+                      if(file!=null){
+                        img=File(file!.path);
+                        setState(() {
+
+                        });
+                      }
+                    },
+                    child: Container(
+                      height: 210.h,
+                      width: 317.w,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.sp),
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 20.w),
+                      child:img!=null?
+                          Image.file(img!)
+                          :Image.asset("assets/images/thumb.png"),
+                    ),
                   ),
                   SizedBox(
                     height: 30.h,
